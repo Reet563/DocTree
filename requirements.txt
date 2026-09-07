@@ -1,0 +1,10 @@
+pydantic>=2.0.0
+python-docx>=1.1.0
+pymupdf>=1.23.0
+fastapi
+uvicorn
+python-multipart
+langgraph
+langchain-core
+requests>=2.31.0
+python-dotenv

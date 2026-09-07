@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DocTree - AI Document Generator</title>
+    <link rel="stylesheet" href="style.css?v=4">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="background-orbs">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+    </div>
+
+    <div class="app-container">
+        <header>
+            <h1>DocTree <span>AI</span></h1>
+            <p>Intelligent, mathematically precise document generation.</p>
+        </header>
+
+        <main class="dashboard">
+            <!-- Left Column: Inputs -->
+            <section class="panel input-panel glass">
+                <h2>1. Instruct</h2>
+                <form id="generateForm">
+                    <div class="form-group">
+                        <label for="instruction">What should the AI create?</label>
+                        <textarea id="instruction" required placeholder="e.g. Create a 3-question math quiz on algebra with a paragraph of instructions at the top."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ragTopic">Factual Context (RAG) Topic <span class="optional">Optional</span></label>
+                        <input type="text" id="ragTopic" placeholder="e.g. Respiratory system (searches local textbooks)">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Style & Context PDFs <span class="optional">Optional</span></label>
+                        <div class="file-drop-area" id="fileDropArea">
+                            <span class="file-msg">Drag & Drop PDFs or Images or Click to Browse</span>
+                            <input class="file-input" type="file" id="referencePdfs" accept="application/pdf,image/png,image/jpeg,image/jpg,.docx" multiple>
+                        </div>
+                    </div>
+
+                    <button type="submit" id="generateBtn" class="btn-primary">
+                        <span class="btn-text">Generate Layout</span>
+                        <span class="spinner hidden"></span>
+                    </button>
+                </form>
+                <div id="errorBox" class="error-box hidden"></div>
+            </section>
+
+            <!-- Right Column: Preview -->
+            <section class="panel preview-panel glass">
+                <h2>2. Preview & Render</h2>
+                <div id="emptyState" class="empty-state">
+                    <div class="empty-icon">📄</div>
+                    <p>Generated layout will appear here for your approval.</p>
+                </div>
+                
+                <div id="previewContainer" class="preview-container hidden">
+                    <div class="preview-header">
+                        <div class="meta-tag" id="docTypeTag">Quiz</div>
+                        <div class="meta-tag" id="paperTag">A4</div>
+                    </div>
+                    
+                    <div id="previewContent" class="preview-content">
+                        <!-- JS injected content -->
+                    </div>
+
+                    <div class="action-bar">
+                        <button id="renderBtn" class="btn-success">Approve & Download DOCX</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="script.js?v=4"></script>
+</body>
+</html>
