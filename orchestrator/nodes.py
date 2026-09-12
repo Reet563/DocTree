@@ -21,12 +21,7 @@ class AgentNodes:
         print("[NODE] Reference Agent: Inspecting reference document(s)...")
         if state.get("reference_pdf_paths") and len(state["reference_pdf_paths"]) > 0:
             try:
-                # Use the new VisionAnalyzer to extract layout style from the uploaded PDFs/Images
-                analyzer = VisionAnalyzer(state["reference_pdf_paths"], self.generator)
-                state["reference_spec"] = analyzer.analyze()
-                state["reference_images_b64"] = getattr(analyzer, "all_b64_images", [])
-                
-                # Extract text from ALL PDFs for factual context
+                # 1. Extract text from ALL PDFs for factual context FIRST (so API errors don't block it)
                 import pymupdf
                 full_text = ""
                 for path in state["reference_pdf_paths"]:
@@ -34,10 +29,19 @@ class AgentNodes:
                     for page in doc:
                         full_text += page.get_text() + "\n"
                 state["rag_context"] = full_text[:8000] # Cap at ~8k chars to respect free tier TPM limits
+                print(f"[NODE] Reference Agent: Extracted {len(full_text)} characters of text.")
+            except Exception as e:
+                print(f"[NODE] Reference Agent: Error extracting text: {e}")
+                
+            try:
+                # 2. Use VisionAnalyzer to extract layout style from the uploaded PDFs/Images
+                analyzer = VisionAnalyzer(state["reference_pdf_paths"], self.generator)
+                state["reference_spec"] = analyzer.analyze()
+                state["reference_images_b64"] = getattr(analyzer, "all_b64_images", [])
                 
                 print("[NODE] Reference Agent: Extracted Style and Factual Text successfully.")
             except Exception as e:
-                print(f"[NODE] Reference Agent Error: {e}")
+                print(f"[NODE] Reference Agent Error (Vision API): {e}")
                 state["reference_spec"] = None
         else:
             print("[NODE] Reference Agent: No reference document provided.")
