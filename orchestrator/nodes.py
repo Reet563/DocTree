@@ -154,7 +154,7 @@ class AgentNodes:
             print(f"[NODE] Critic: FAIL (JSON Syntax) - {error_msg}")
             state["validation_errors"] = error_msg
         except ValidationError as e:
-            error_msg = f"Pydantic ValidationError:\n{str(e)}\nEnsure all required fields are present and types are correct."
+            error_msg = f"Pydantic ValidationError:\n{str(e)}\n\n--- RAW AI OUTPUT THAT CAUSED THIS ERROR ---\n{state.get('raw_json', '')}"
             print(f"[NODE] Critic: FAIL (Pydantic Schema) - {error_msg}")
             state["validation_errors"] = error_msg
         except Exception as e:
