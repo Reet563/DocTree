@@ -22,10 +22,10 @@ class AgentNodes:
         if state.get("reference_pdf_paths") and len(state["reference_pdf_paths"]) > 0:
             try:
                 # 1. Extract text from ALL PDFs for factual context FIRST (so API errors don't block it)
-                import pymupdf
+                import fitz
                 full_text = ""
                 for path in state["reference_pdf_paths"]:
-                    doc = pymupdf.open(path)
+                    doc = fitz.open(path)
                     for page in doc:
                         full_text += page.get_text() + "\n"
                 state["rag_context"] = full_text[:8000] # Cap at ~8k chars to respect free tier TPM limits
