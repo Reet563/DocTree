@@ -122,9 +122,10 @@ class AgentNodes:
                 json_str = "{}"
                 safe_err = str(e).encode('ascii', 'replace').decode('ascii')
                 print(f"Generation error: {safe_err}")
-                if "413" in safe_err or "rate_limit" in safe_err.lower():
-                    state["validation_errors"] = "RATE LIMIT EXCEEDED: You uploaded too many files! Your API key allows 8000 tokens maximum. Please upload less content or upgrade your API key."
-                    state["retry_count"] = 99 # Force exit without retries
+                
+                # Surface the actual API error to the user and prevent pointless retries
+                state["validation_errors"] = f"AI API Error: {safe_err}"
+                state["retry_count"] = 99 # Force exit without retries
                 
         state["raw_json"] = json_str
         state["retry_count"] += 1
@@ -238,6 +239,10 @@ Output a strictly valid JSON matching this schema:
             json_str = "{}"
             safe_err = str(e).encode('ascii', 'replace').decode('ascii')
             print(f"Generation error: {safe_err}")
+            
+            # Surface the actual API error to the user and prevent pointless retries
+            state["validation_errors"] = f"AI API Error: {safe_err}"
+            state["retry_count"] = 99 # Force exit without retries
             
         state["raw_json"] = json_str
         state["retry_count"] += 1
